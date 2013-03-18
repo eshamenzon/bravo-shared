@@ -1,0 +1,15 @@
+<project name="Super Project">
+    <bannerLeft>
+        <name>Super Project</name>
+        <src>https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxjotLdAM5JWLf32R4R-9CxpPVUZvNKzhXBP8wW1zANyyskVaF</src>
+        <href>http://www.ups.com</href>
+    </bannerLeft>
+    <body>
+        <menu name="Super Project">
+            <item name="Overview" href="index.html"/>
+			<item name="About This Cool Project" href="baaa.html"/>
+			<item name="FAQ of This Cool Project" href="faq.html"/>
+        </menu>
+        <menu ref="reports"/>
+    </body>
+</project>

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion><!--maven object model version-->
+	<groupId>com.peter</groupId><!-- this is com.company usually-->
+	<artifactId>superproject</artifactId>
+	<version>${build.version}</version>
+	<packaging>pom</packaging><!--Note, root POM.xml always defined as POM packaging, not the same for modules-->
+	<name>superproject</name>
+	<description>superproject artifacts</description>
+
+	
+	
+	<!-- listed sub modules, the build order is the same, as in the list -->
+	<modules>
+		<module>superproject.logic</module> <!-- first we build the logic jar -->
+		<module>superproject.web</module>   <!-- then we build the war archive, that has reference to the logic jar -->
+	</modules>
+	
+	<!-- if your project has a license, state it here -->
+	<licenses>
+	  <license>
+		<name>The Apache Software License, Version 2.0</name>
+		<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		<distribution>repo</distribution>
+		<comments>A business-friendly OSS license</comments>
+	  </license>
+	</licenses>
+	
+	<!--
+	
+	Skipped here:
+
+	continues integration management
+	
+	mailing lists
+	
+	-->
+	
+	
+	
+	<!-- your company name , url -->
+	<organization>
+		<name>Super Company</name>
+		<url>http://ups.org</url>
+    </organization>
+	
+	
+	<!-- people, working on the project -->
+	<developers>
+    <developer>
+      <id>peter</id>
+      <name>Peter</name>
+      <email>peter@ups.org</email>
+      <url>http://peter.ups.org</url>
+      <organization>UPS</organization>
+      <organizationUrl>http://ups.ups.org</organizationUrl>
+	  <roles>
+        <role>developer</role>
+      </roles>
+      <timezone>-6</timezone>
+	  <properties>
+        <picUrl>http://m3.licdn.com/mpr/pub/image-OSKq7rafiGdRqX-rEcrI8kD9yjKH3qVXXlKQ2raryLkK2TTfOSKQnEBfy9SXn4iUB76_/peter-kovgan.jpg</picUrl>
+      </properties>
+    </developer>
+	</developers>
+	
+	<profiles>
+	   
+	   <!-- custom profile for special needs--> 
+	   <profile>
+	            <!-- You hardly need that 
+				For the production build you better change profile settings in settings.xml on the production build machine
+				-->
+				
+	            <id>some-custom-build</id>
+				
+				<!-- 
+				You can change following elements of your default profile here:
+				<activation>...</activation>
+                <build>...</build>
+                <modules>...</modules>
+                <repositories>...</repositories>
+                <pluginRepositories>...</pluginRepositories>
+                <dependencies>...</dependencies>
+                <reporting>...</reporting>
+                <dependencyManagement>...</dependencyManagement>
+                <distributionManagement>...</distributionManagement>
+				-->
+	   </profile>			
+	
+	
+       <profile>
+	            <id>main-build</id>
+				
+				
+				<!-- do not forget to activate your profile -->
+				<activation>
+                   <activeByDefault>true</activeByDefault>
+                </activation>
+                
+			
+			    <!-- I list versions I use in properties -->
+				<!-- you may use properties to define additional variables -->
+				<!-- note, that version used here <build.version> is project wide 0.0.1-SNAPSHOT -->
+				<!-- to change that for release build, use settings.xml in maven/conf, where you can rewrite all elements of the profile -->
+				
+				<properties>
+				    <build.version>0.0.1-SNAPSHOT</build.version>
+					<junit.version>3.8.1</junit.version>
+					<commons-lang3.version>3.1</commons-lang3.version>
+					<servlet-api.version>2.5</servlet-api.version>
+				</properties>
+				
+				
+				<!-- plugin. generating nice HTML reports (in project site) after the test -->
+				
+				<reporting>
+					<plugins>
+					  <plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-report-plugin</artifactId>
+						<version>2.14</version>
+					  </plugin>
+					</plugins>
+				</reporting>
+	
+	            <dependencyManagement>
+					<dependencies>
+					
+					<dependency>
+					  <groupId>junit</groupId>
+					  <artifactId>junit</artifactId>
+					  <version>${junit.version}</version>
+					  <scope>test</scope><!-- this will be used during test -->
+					</dependency>
+					
+					<dependency>
+					  <groupId>org.apache.commons</groupId>
+                      <artifactId>commons-lang3</artifactId>
+					  <version>${commons-lang3.version}</version>
+					  <scope>compile</scope><!-- this will be used in compile time and will be included in final artifact -->
+					</dependency>
+					
+					<dependency>
+					  <groupId>javax.servlet</groupId>
+                      <artifactId>servlet-api</artifactId>
+					  <version>${servlet-api.version}</version>
+					  <scope>provided</scope> <!-- this will not be included in the WAR, so scope is provided -->
+					</dependency>
+					
+					</dependencies>
+				</dependencyManagement>
+
+	
+				<!-- build environment settings, java version -->
+				
+				<build>
+					<pluginManagement>
+						<plugins>
+						   
+						   <!-- plugin responsible to set java version during compilation(in this case it applied to all sub projects) -->
+						
+						   <plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-compiler-plugin</artifactId>
+							<version>3.0</version>
+							<configuration>
+							  <source>1.6</source>
+							  <target>1.6</target>
+							</configuration>
+						   </plugin>
+						   
+						   <!-- 
+						   plugin responsible to customize WARs (in this case it is applied to all sub projects - wars) 
+						   but you may customize any of subprojects, using the same plugin and changing configuration of the plugin
+						   -->
+						   <plugin>
+							<artifactId>maven-war-plugin</artifactId>
+							<version>2.3</version>
+							<configuration>
+							  <!--packagingExcludes>/WebContent/WEB-INF/lib/popa.jar</packagingExcludes-->
+							  <archive>
+								<manifest>
+								  <addClasspath>true</addClasspath>
+								  <classpathPrefix>lib/</classpathPrefix>
+								</manifest>
+							  </archive>
+							  <webXml>src\WebContent\WEB-INF\web.xml</webXml>        
+                            </configuration>
+						   </plugin>
+						   
+						   <!-- plugin responsible to customize test (in this case it applied to all sub projects) -->
+						   
+						   <plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-surefire-plugin</artifactId>
+							<version>2.14</version>
+							<!-- test can be customised here -->
+						  </plugin>
+						</plugins>
+					</pluginManagement>
+				</build>
+
+	
+				<!-- Repos used to resolve dependencies (jars loaded from here) -->
+				
+				<repositories>
+					<!--local developers jars-->
+					<repository>
+						<id>com.ebs.development.repo</id>
+						<url>http://maven-dev-repo.us.icap.com:8081/nexus/content/repositories/dev-releases-m2/</url>
+					</repository>
+					<!--local developers jars with SHAPSHOT version-->
+					<repository>
+						<id>com.ebs.development.repo.snapshots</id>
+						<url>http://maven-dev-repo.us.icap.com:8081/nexus/content/repositories/dev-snapshots-m2/</url>
+					</repository>
+					<!-- 3-party jars-->
+					<repository>
+						<id>com.ebs.development.repo.3p</id>
+						<url>http://maven-dev-repo.us.icap.com:8081/nexus/content/repositories/thirdparty-m2/</url>
+					</repository>
+				</repositories>
+	
+	
+	
+				<!-- repos used to upload artifacts (developer's product) -->
+				<!-- use "mvn deploy" command to upload there-->
+				<distributionManagement>
+					<repository>
+						<id>com.ebs.development.repo</id>
+						<url>http://maven-dev-repo.us.icap.com:8081/nexus/content/repositories/dev-releases-m2/</url>
+					</repository>
+					<snapshotRepository>
+						<id>com.ebs.development.repo.snapshots</id>
+						<url>http://maven-dev-repo.us.icap.com:8081/nexus/content/repositories/dev-snapshots-m2/</url>
+					</snapshotRepository>
+					
+					<!-- WEB site installation requires Apache like web server with WEBDAV support -->
+					<!-- mvn site:stage
+                     will create the entire site, including sub-modules and links to them on your machine in project/target/stage
+                    -->
+					<site>
+					  <id>mysite</id>
+					  <!-- you need real URL to deploy the site with "mvn site deploy"  see an example of such server installation here: http://www.mkyong.com/maven/how-to-deploy-site-with-mvn-site-deploy-webdav-example/-->
+					  <url></url>
+					</site>
+				</distributionManagement>
+				
+				
+	   </profile>
+   </profiles>
+   
+	
+</project>

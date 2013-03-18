@@ -1,0 +1,69 @@
+<settings>
+
+    <!-- From/Where do I deploy/get my artifacts -->
+    <localRepository>c:\work\repo</localRepository>
+	
+	<!-- HTTP proxy -->
+	<proxies>
+		<proxy>
+			<active>true</active>
+			<protocol>http</protocol>
+			<host>10.72.2.5</host>
+			<port>8080</port>
+			
+			<!-- CHANGE THAT!!!! -->
+			<username>YOUR WINDOWS USER NAME</username>
+			<password>YOUR WINDOWS USER PASSWORD</password>
+			<nonProxyHosts>www.google.com|*.somewhere.com|*.icap.com</nonProxyHosts>
+		</proxy>
+	</proxies>
+	
+	
+	<!-- Here POM's repositories have their security credentials provided -->
+	<servers>
+		<server>
+		  <id>com.ebs.development.repo</id>
+		  <name>com.ebs.development.repo</name>
+		  <username>dev</username>
+		  <password>123456</password>
+		</server>
+		<server>
+		  <id>com.ebs.development.repo.snapshots</id>
+		  <name>com.ebs.development.repo.snapshots</name>
+		  <username>dev</username>
+		  <password>123456</password>
+		</server>
+        <server>
+		  <id>com.ebs.development.website</id>
+		  <name>com.ebs.development.website</name>
+		  <username>dev</username>
+		  <password>123456</password>
+		</server>
+    </servers>
+	
+	
+	<!-- 
+	
+	the example of production build profile rewrite,
+	such as used on production build machine
+    in this example snapshot version replaced by some 1.0.GA version
+	
+	-->
+
+	<!--
+	
+	<profiles>
+	   <profile>
+	     <activation>
+             <activeByDefault>true</activeByDefault>
+         </activation>
+		 <id>main-build</id>
+		 <properties>
+			 <build.version>1.0.GA</build.version>
+		 </properties>			
+	   </profile>
+	</profiles>
+	
+	-->
+	
+</settings>
